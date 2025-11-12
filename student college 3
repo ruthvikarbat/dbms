@@ -1,0 +1,119 @@
+-- ===============================================
+-- 🏫 DATABASE ASSIGNMENT
+-- Topic: SQL Queries based on Student–College Schema
+-- ===============================================
+
+-- 💾 Step 1: Create a new Database
+CREATE DATABASE CollegeDB;
+
+-- 💿 Step 2: Use the Database
+USE CollegeDB;
+
+-- ===============================================
+-- 🧱 Step 3: Create Tables
+-- ===============================================
+
+CREATE TABLE student (
+    student_name VARCHAR(50),
+    street VARCHAR(100),
+    city VARCHAR(50)
+);
+
+CREATE TABLE enrolls (
+    student_name VARCHAR(50),
+    college_name VARCHAR(50),
+    scholarship INT
+);
+
+CREATE TABLE college (
+    college_name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE mentors (
+    student_name VARCHAR(50),
+    mentor_name VARCHAR(50)
+);
+
+-- ===============================================
+-- 🧾 Step 4: Insert Sample Data
+-- ===============================================
+
+INSERT INTO student VALUES
+('Ravi', 'MG Road', 'Mumbai'),
+('Anita', 'Church Street', 'Delhi'),
+('Rahul', 'Park Lane', 'Chennai'),
+('Sneha', 'Baker Street', 'Delhi'),
+('Kiran', 'Main Street', 'Pune'),
+('Amit', 'Link Road', 'Delhi'),
+('Priya', 'Ring Road', 'Chennai'),
+('Vikas', 'Hill Street', 'Delhi');
+
+INSERT INTO college VALUES
+('First National College', 'Delhi'),
+('Modern College', 'Mumbai'),
+('City Science College', 'Chennai'),
+('Small Town College', 'Pune');
+
+INSERT INTO enrolls VALUES
+('Ravi', 'Modern College', 8000),
+('Anita', 'First National College', 12000),
+('Rahul', 'City Science College', 7000),
+('Sneha', 'First National College', 15000),
+('Kiran', 'Small Town College', 9000),
+('Amit', 'First National College', 11000),
+('Priya', 'City Science College', 13000),
+('Vikas', 'Modern College', 9500);
+
+INSERT INTO mentors VALUES
+('Ravi', 'Prof. Mehta'),
+('Anita', 'Prof. Sharma'),
+('Rahul', 'Prof. Singh'),
+('Sneha', 'Prof. Verma'),
+('Kiran', 'Prof. Gupta'),
+('Amit', 'Prof. Rao'),
+('Priya', 'Prof. Das'),
+('Vikas', 'Prof. Patel');
+
+-- ===============================================
+-- 🧩 Step 5: SQL QUERIES (Assignment Questions)
+-- ===============================================
+
+-- ❓ Question 1:
+-- Find the college that has the most students enrolled.
+
+SELECT college_name, COUNT(student_name) AS total_students
+FROM enrolls
+GROUP BY college_name
+ORDER BY total_students DESC
+LIMIT 1;
+
+-- -----------------------------------------------
+
+-- ❓ Question 2:
+-- Find the college that has the smallest total scholarship payout.
+
+SELECT college_name, SUM(scholarship) AS total_scholarship
+FROM enrolls
+GROUP BY college_name
+ORDER BY total_scholarship ASC
+LIMIT 1;
+
+-- -----------------------------------------------
+
+-- ❓ Question 3:
+-- Find those colleges whose students receive a higher average scholarship
+-- than the average scholarship at First National College.
+
+SELECT college_name, AVG(scholarship) AS avg_scholarship
+FROM enrolls
+GROUP BY college_name
+HAVING AVG(scholarship) > (
+    SELECT AVG(scholarship)
+    FROM enrolls
+    WHERE college_name = 'First National College'
+);
+
+-- ===============================================
+-- ✅ End of Program
+-- ===============================================
