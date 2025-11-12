@@ -1,0 +1,140 @@
+-- ===============================================
+-- 🏫 DATABASE ASSIGNMENT
+-- Topic: SQL Queries based on Student–College Schema
+-- ===============================================
+
+-- 💾 Step 1: Create a new Database
+CREATE DATABASE CollegeDB;
+
+-- 💿 Step 2: Use the Database
+USE CollegeDB;
+
+-- ===============================================
+-- 🧱 Step 3: Create Tables
+-- ===============================================
+
+CREATE TABLE student (
+    student_name VARCHAR(50),
+    street VARCHAR(100),
+    city VARCHAR(50)
+);
+
+CREATE TABLE enrolls (
+    student_name VARCHAR(50),
+    college_name VARCHAR(50),
+    scholarship INT
+);
+
+CREATE TABLE college (
+    college_name VARCHAR(50),
+    city VARCHAR(50)
+);
+
+CREATE TABLE mentors (
+    student_name VARCHAR(50),
+    mentor_name VARCHAR(50)
+);
+
+-- ===============================================
+-- 🧾 Step 4: Insert Sample Data
+-- ===============================================
+
+INSERT INTO student VALUES
+('Ravi', 'MG Road', 'Mumbai'),
+('Anita', 'Church Street', 'Delhi'),
+('Rahul', 'Park Lane', 'Chennai'),
+('Sneha', 'Baker Street', 'Delhi'),
+('Kiran', 'Main Street', 'Pune'),
+('Amit', 'Link Road', 'Delhi'),
+('Priya', 'Ring Road', 'Chennai');
+
+INSERT INTO college VALUES
+('First National College', 'Delhi'),
+('Modern College', 'Mumbai'),
+('City Science College', 'Chennai'),
+('Small Town College', 'Delhi'),
+('Small Town College', 'Pune');
+
+INSERT INTO enrolls VALUES
+('Ravi', 'Modern College', 8000),
+('Anita', 'First National College', 12000),
+('Rahul', 'City Science College', 7000),
+('Sneha', 'First National College', 15000),
+('Kiran', 'Small Town College', 10000),
+('Amit', 'Small Town College', 11000),
+('Priya', 'City Science College', 13000);
+
+INSERT INTO mentors VALUES
+('Ravi', 'Prof. Mehta'),
+('Anita', 'Prof. Sharma'),
+('Rahul', 'Prof. Singh'),
+('Sneha', 'Prof. Verma'),
+('Kiran', 'Prof. Gupta'),
+('Amit', 'Prof. Rao'),
+('Priya', 'Prof. Das');
+
+-- ===============================================
+-- 🧩 Step 5: SQL QUERIES (Assignment Questions)
+-- ===============================================
+
+-- ❓ Question 1:
+-- Assume that colleges may be located in several cities.
+-- Find all colleges located in every city in which Small Town College is located.
+
+SELECT DISTINCT c2.college_name
+FROM college c2
+WHERE NOT EXISTS (
+    SELECT c1.city
+    FROM college c1
+    WHERE c1.college_name = 'Small Town College'
+    AND c1.city NOT IN (
+        SELECT c3.city
+        FROM college c3
+        WHERE c3.college_name = c2.college_name
+    )
+);
+
+-- -----------------------------------------------
+
+-- ❓ Question 2:
+-- Find all students in the database who are not enrolled in First National College.
+
+SELECT s.student_name
+FROM student s
+WHERE s.student_name NOT IN (
+    SELECT e.student_name
+    FROM enrolls e
+    WHERE e.college_name = 'First National College'
+);
+
+-- -----------------------------------------------
+
+-- ❓ Question 3:
+-- Find all students in the database who receive a scholarship
+-- greater than each student of Small Town College.
+
+SELECT DISTINCT e1.student_name
+FROM enrolls e1
+WHERE e1.scholarship > ALL (
+    SELECT e2.scholarship
+    FROM enrolls e2
+    WHERE e2.college_name = 'Small Town College'
+);
+
+-- -----------------------------------------------
+
+-- ❓ Question 4:
+-- Find all students who receive a scholarship greater than the average
+-- scholarship of all students at their college.
+
+SELECT e1.student_name, e1.college_name, e1.scholarship
+FROM enrolls e1
+WHERE e1.scholarship > (
+    SELECT AVG(e2.scholarship)
+    FROM enrolls e2
+    WHERE e1.college_name = e2.college_name
+);
+
+-- ===============================================
+-- ✅ End of Program
+-- ===============================================
