@@ -1,0 +1,44 @@
+-- ================================================
+-- 📘 ASSIGNMENT 4 – ER Modelling and Normalization
+-- ================================================
+
+-- 🧠 Topic: Convert ER diagram into normalized relational tables
+
+CREATE DATABASE er_model;
+USE er_model;
+
+CREATE TABLE Person (
+    PersonID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Email VARCHAR(50)
+);
+
+CREATE TABLE Student (
+    PersonID INT PRIMARY KEY,
+    DateOfBirth DATE,
+    FOREIGN KEY(PersonID) REFERENCES Person(PersonID)
+);
+
+CREATE TABLE Professor (
+    PersonID INT PRIMARY KEY,
+    Department VARCHAR(50),
+    FOREIGN KEY(PersonID) REFERENCES Person(PersonID)
+);
+
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50),
+    Credits INT,
+    ProfessorID INT,
+    FOREIGN KEY(ProfessorID) REFERENCES Professor(PersonID)
+);
+
+CREATE TABLE Enrollment (
+    EnrollmentID INT PRIMARY KEY,
+    PersonID INT,
+    CourseID INT,
+    Grade CHAR(2),
+    FOREIGN KEY(PersonID) REFERENCES Student(PersonID),
+    FOREIGN KEY(CourseID) REFERENCES Course(CourseID)
+);
+
